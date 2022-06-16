@@ -1,4 +1,4 @@
-
+@Library('sharedlibs') _
 node{
 def mavenHome=tool name :"maven3.8.5"
   
@@ -9,7 +9,7 @@ def mavenHome=tool name :"maven3.8.5"
     echo "the build number is:${env.BUILD_NUMBER}"
    try {
     
-    notifyBuild('STARTED')
+    sendSlackNotifications('STARTED')
     
     stage ('checkoutcode')
     {
@@ -46,7 +46,7 @@ def mavenHome=tool name :"maven3.8.5"
     throw e
   } finally {
     // Success or failure, always send notifications
-    notifyBuild(currentBuild.result)
+    sendSlackNotifications(currentBuild.result)
   }//try closing
 
 }//node closing
