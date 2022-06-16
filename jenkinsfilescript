@@ -19,10 +19,12 @@ def mavenHome=tool name :"maven3.8.5"
    {
     sh "${mavenHome}/bin/mvn clean package"
    }
-   stage ('triggerdownstreamJob')
+  /*
+  stage ('triggerdownstreamJob')
    {
    build job: 'pipelinescript with parameters'
    }
+   */
   /*
   stage ('ExecuteSonarqubeReport')
    {
