@@ -4,6 +4,7 @@ pipeline {
         maven "maven3.8.5"
     }
    notifyBuild('STARTED')
+
    stages{
         
         stage('checkpoutcode'){
