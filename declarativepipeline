@@ -7,19 +7,21 @@ pipeline {
   buildDiscarder logRotator(artifactDaysToKeepStr: '5', artifactNumToKeepStr: '', daysToKeepStr: '5', numToKeepStr: '')
   timestamps()
 }
+/*
 triggers {
   pollSCM '* * * * *'
 }
+
 parameters {
   choice choices: ['development', 'qa', 'test', 'uat'], description: 'choose branch name', name: 'BranchName'
   string defaultValue: 'mounika', description: 'select person name', name: 'PersonName'
 }
-
+*/
    stages{
         
         stage('checkpoutcode'){
             steps{
-             git branch: '${BranchName}', credentialsId: '16ae0d27-b3ed-41eb-b140-860639b79be7', url: 'https://github.com/devops-mounikareddy/maven-web-application.git'
+             git branch: 'development', credentialsId: '16ae0d27-b3ed-41eb-b140-860639b79be7', url: 'https://github.com/devops-mounikareddy/maven-web-application.git'
 }
 }
 stage('build'){
