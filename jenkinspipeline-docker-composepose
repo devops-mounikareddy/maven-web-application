@@ -1,0 +1,31 @@
+node {
+    stage('checkoutcode'){
+    git 'https://github.com/devops-mounikareddy/maven-web-application.git'     
+    }
+    stage('Build'){
+    def mavenHome= tool name: 'maven'
+    sh "${mavenHome}/bin/mvn clean package"
+    }
+    stage('dockerbuildImage'){
+    sh "docker build -t mounikanaresh/maven-web-application:$BUILD_NUMBER ."
+    }    
+   stage('dockerlogin and dockerpush'){
+       withCredentials([string(credentialsId: 'dockerHubpwd', variable: 'docker')]) {
+      sh "docker login -u mounikanaresh -p ${docker}"
+      sh "docker push mounikanaresh/maven-web-application:$BUILD_NUMBER"
+       }
+
+}
+stage('update image tag'){
+    sh "sed -i 's/VERSION/$BUILD_NUMBER/g' docker-compose.yml"
+}
+
+stage('deployAPPAsDockerContainer'){
+  sshagent(['3199597d-7572-47b4-826c-801e3fdec3fa']) {
+   sh "scp -o StrictHostKeyChecking=no docker-compose.yml ubuntu@172.31.43.59:"
+    sh "ssh -o StrictHostKeyChecking=no ubuntu@172.31.43.59 docker rm -f springboot || true"
+    sh "ssh -o StrictHostKeyChecking=no ubuntu@172.31.43.59 docker-compose up -d"
+}
+  } 
+    
+ }
